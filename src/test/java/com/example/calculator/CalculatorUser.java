@@ -1,6 +1,6 @@
 package com.example.calculator;
 
-class CalculatorUser {
+public class CalculatorUser {
     private final Calculator calculator = new Calculator();
 
     public double seesResult() {
@@ -11,8 +11,23 @@ class CalculatorUser {
         calculator.enter("" + value);
     }
 
-    public void entersOperator(PrimitiveBinaryOperator operator) {
-        calculator.enter(operator.getOperator());
+    public void performsCustomOperation(CustomOperation<CalculatorUser> operation) {
+        operation.executeUsing(this);
     }
 
+    public void addsValues() {
+        calculator.enter("+");
+    }
+
+    public void subtractsValues() {
+        calculator.enter("-");
+    }
+
+    public void dividesValues() {
+        calculator.enter("/");
+    }
+
+    public void multipliesValues() {
+        calculator.enter("*");
+    }
 }

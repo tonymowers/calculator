@@ -3,7 +3,6 @@ package com.example.calculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -15,9 +14,12 @@ import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+
+
 public class PrimitiveBinaryOperationTests {
 
     private CalculatorUser user;
+
 
     @BeforeEach
     void setUp() {
@@ -37,50 +39,73 @@ public class PrimitiveBinaryOperationTests {
     }
 
     @ParameterizedTest
-    @EnumSource(PrimitiveBinaryOperator.class)
-    void test_operation_performed_on_empty_stack_is_error(PrimitiveBinaryOperator operator) {
-        assertUserSeesErrorForOperation(operator);
+    @EnumSource(Operation.class)
+    void test_binary_operation_performed_on_empty_stack_fails(Operation operation) {
+        assertUserSeesErrorForOperation(operation);
     }
 
     @ParameterizedTest
-    @EnumSource(PrimitiveBinaryOperator.class)
-    void test_operation_performed_on_one_value_is_error(PrimitiveBinaryOperator operator) {
+    @EnumSource(Operation.class)
+    void test_binary_operation_performed_on_one_value_fails(Operation operation) {
         user.entersValue(10.0);
-        assertUserSeesErrorForOperation(operator);
+        assertUserSeesErrorForOperation(operation);
     }
+
 
     @ParameterizedTest
     @MethodSource
-    void test_binary_operation_should_have_expected_result(
-            double valueA,
-            double valueB,
-            PrimitiveBinaryOperator operator,
-            double expectedResult
-    ) {
-        user.entersValue(valueA);
-        user.entersValue(valueB);
+    void test_binary_operation_has_expected_result(Example example) {
+        user.entersValue(example.valueA);
+        user.entersValue(example.valueB);
 
-        user.entersOperator(operator);
+        user.performsCustomOperation(example.operation);
 
-        assertUserSeesResult(expectedResult);
+        assertUserSeesResult(example.expectedResult);
     }
 
-    private static Stream<Arguments> test_binary_operation_should_have_expected_result() {
+    private static Stream<Example> test_binary_operation_has_expected_result() {
         return Stream.of(
-                Arguments.of(1, 2, PrimitiveBinaryOperator.ADD, 3),
-                Arguments.of(5, 3, PrimitiveBinaryOperator.SUBTRACT, 2),
-                Arguments.of( 5, 3, PrimitiveBinaryOperator.MULTIPLY, 15),
-                Arguments.of( 5, 3, PrimitiveBinaryOperator.DIVIDE, 1.6667)
+                new Example(1, 2, Operation.ADD, 3),
+                new Example(1, 2, Operation.SUBTRACT, -1),
+                new Example(3, 7, Operation.MULTIPLY, 21),
+                new Example(2, 3, Operation.DIVIDE, 0.6667)
         );
     }
 
+    private record Example(
+            double valueA,
+            double valueB,
+            CustomOperation<CalculatorUser> operation,
+            double expectedResult) {
 
-    private void assertUserSeesErrorForOperation(PrimitiveBinaryOperator operator) {
-        assertThrows(EmptyStackException.class, () -> user.entersOperator(operator));
+    }
+
+
+    private void assertUserSeesErrorForOperation(CustomOperation<CalculatorUser> operation) {
+        assertThrows(EmptyStackException.class, () -> operation.executeUsing(user));
     }
 
     private void assertUserSeesResult(double value) {
         assertThat(user.seesResult(), is(closeTo(value,0.00005)));
     }
 
+
+
+    private enum Operation implements CustomOperation<CalculatorUser> {
+        ADD(CalculatorUser::addsValues),
+        SUBTRACT(CalculatorUser::subtractsValues),
+        MULTIPLY(CalculatorUser::multipliesValues),
+        DIVIDE(CalculatorUser::dividesValues);
+
+        private final CustomOperation<CalculatorUser> operation;
+
+        Operation(CustomOperation<CalculatorUser> operation) {
+            this.operation = operation;
+        }
+
+        @Override
+        public void executeUsing(CalculatorUser user) {
+            operation.executeUsing(user);
+        }
+    }
 }
