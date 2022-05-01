@@ -25,12 +25,12 @@ public class PrimitiveBinaryOperationTests {
     }
 
     @Test
-    void initially_displays_zero() {
+    void test_initially_displays_zero() {
         assertUserSeesResult(0.0);
     }
 
     @Test
-    void displays_last_entered_value_without_mutating_calculator() {
+    void test_displays_last_entered_value_without_mutating_calculator() {
         user.entersValue(20.0);
         assertUserSeesResult(20.0);
         assertUserSeesResult(20.0);
@@ -38,20 +38,20 @@ public class PrimitiveBinaryOperationTests {
 
     @ParameterizedTest
     @EnumSource(PrimitiveBinaryOperator.class)
-    void operation_performed_on_empty_stack_is_error(PrimitiveBinaryOperator operator) {
+    void test_operation_performed_on_empty_stack_is_error(PrimitiveBinaryOperator operator) {
         assertUserSeesErrorForOperation(operator);
     }
 
     @ParameterizedTest
     @EnumSource(PrimitiveBinaryOperator.class)
-    void operation_performed_on_one_value_is_error(PrimitiveBinaryOperator operator) {
+    void test_operation_performed_on_one_value_is_error(PrimitiveBinaryOperator operator) {
         user.entersValue(10.0);
         assertUserSeesErrorForOperation(operator);
     }
 
     @ParameterizedTest
     @MethodSource
-    void binary_operation_should_have_expected_result(
+    void test_binary_operation_should_have_expected_result(
             double valueA,
             double valueB,
             PrimitiveBinaryOperator operator,
@@ -65,7 +65,7 @@ public class PrimitiveBinaryOperationTests {
         assertUserSeesResult(expectedResult);
     }
 
-    private static Stream<Arguments> binary_operation_should_have_expected_result() {
+    private static Stream<Arguments> test_binary_operation_should_have_expected_result() {
         return Stream.of(
                 Arguments.of(1, 2, PrimitiveBinaryOperator.ADD, 3),
                 Arguments.of(5, 3, PrimitiveBinaryOperator.SUBTRACT, 2),
