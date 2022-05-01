@@ -26,14 +26,14 @@ public class PrimitiveBinaryOperationTests {
 
     @Test
     void initially_displays_zero() {
-        assertUserSeesResultValue(0.0);
+        assertUserSeesResult(0.0);
     }
 
     @Test
     void displays_last_entered_value_without_mutating_calculator() {
         user.entersValue(20.0);
-        assertUserSeesResultValue(20.0);
-        assertUserSeesResultValue(20.0);
+        assertUserSeesResult(20.0);
+        assertUserSeesResult(20.0);
     }
 
     @ParameterizedTest
@@ -51,7 +51,7 @@ public class PrimitiveBinaryOperationTests {
 
     @ParameterizedTest
     @MethodSource
-    void binary_operation_should_have_specified_result(
+    void binary_operation_should_have_expected_result(
             double valueA,
             double valueB,
             PrimitiveBinaryOperator operator,
@@ -59,11 +59,13 @@ public class PrimitiveBinaryOperationTests {
     ) {
         user.entersValue(valueA);
         user.entersValue(valueB);
+
         user.entersOperator(operator);
-        assertUserSeesResultValue(expectedResult);
+
+        assertUserSeesResult(expectedResult);
     }
 
-    private static Stream<Arguments> binary_operation_should_have_specified_result() {
+    private static Stream<Arguments> binary_operation_should_have_expected_result() {
         return Stream.of(
                 Arguments.of(1, 2, PrimitiveBinaryOperator.ADD, 3),
                 Arguments.of(5, 3, PrimitiveBinaryOperator.SUBTRACT, 2),
@@ -77,25 +79,8 @@ public class PrimitiveBinaryOperationTests {
         assertThrows(EmptyStackException.class, () -> user.entersOperator(operator));
     }
 
-    private void assertUserSeesResultValue(double value) {
-        assertThat(user.seesResultValue(), is(closeTo(value,0.00005)));
-    }
-
-    private static class CalculatorUser {
-        private final Calculator calculator = new Calculator();
-
-        public double seesResultValue() {
-            return Double.parseDouble(calculator.getDisplayContents());
-        }
-
-        public void entersValue(double value) {
-            calculator.enter("" + value);
-        }
-
-        public void entersOperator(PrimitiveBinaryOperator operator) {
-            calculator.enter(operator.getOperator());
-        }
-
+    private void assertUserSeesResult(double value) {
+        assertThat(user.seesResult(), is(closeTo(value,0.00005)));
     }
 
 }
