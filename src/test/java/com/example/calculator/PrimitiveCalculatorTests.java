@@ -40,6 +40,10 @@ public class PrimitiveCalculatorTests {
         assertUserSeesResult(20.0);
     }
 
+    @Test
+    void tests_unsupported_operation_fails() {
+        assertThrows(UnsupportedOperationException.class, user::performsUnsupportedOperation);
+    }
 
     @ParameterizedTest
     @EnumSource(value = Operation.class, names = {"ADD", "SUBTRACT", "DIVIDE", "MULTIPLY"})

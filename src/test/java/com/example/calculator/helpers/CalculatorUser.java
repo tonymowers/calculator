@@ -36,4 +36,8 @@ public class CalculatorUser {
     public void calculatesSquareRoot() {
         calculator.enter("square_root");
     }
+
+    public void performsUnsupportedOperation() {
+        calculator.enter("±");
+    }
 }
