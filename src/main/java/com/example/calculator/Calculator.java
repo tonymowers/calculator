@@ -7,7 +7,7 @@ public class Calculator {
 
     private final Stack<Double> stackOfValues;
 
-    Calculator() {
+    public Calculator() {
         stackOfValues = new Stack<>();
     }
 

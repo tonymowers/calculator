@@ -1,4 +1,6 @@
-package com.example.calculator;
+package com.example.calculator.helpers;
+
+import com.example.calculator.Calculator;
 
 public class CalculatorUser {
     private final Calculator calculator = new Calculator();
