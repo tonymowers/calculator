@@ -11,10 +11,6 @@ public class CalculatorUser {
         calculator.enter("" + value);
     }
 
-    public void performsCustomOperation(CustomOperation<CalculatorUser> operation) {
-        operation.executeUsing(this);
-    }
-
     public void addsValues() {
         calculator.enter("+");
     }
@@ -29,5 +25,13 @@ public class CalculatorUser {
 
     public void multipliesValues() {
         calculator.enter("*");
+    }
+
+    public void squaresValue() {
+        calculator.enter("square");
+    }
+
+    public void calculatesSquareRoot() {
+        calculator.enter("square_root");
     }
 }

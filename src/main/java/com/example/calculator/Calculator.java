@@ -50,6 +50,19 @@ public class Calculator {
                     b = stackOfValues.pop();
                     stackOfValues.push(b / a);
                 }
+                case "square" -> {
+                    if (stackOfValues.size() < 1)
+                        throw new EmptyStackException();
+                    a = stackOfValues.pop();
+                    stackOfValues.push(a * a);
+                }
+                case "square_root" -> {
+                    if (stackOfValues.size() < 1)
+                        throw new EmptyStackException();
+                    a = stackOfValues.pop();
+                    stackOfValues.push(Math.sqrt(a));
+                }
+                default -> throw new UnsupportedOperationException(valueOrOperation + " not supported");
             }
         }
     }
